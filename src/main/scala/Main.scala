@@ -1,2 +1,9 @@
+
+import ciphers.bazeries
+import rng.chaineddigitgenerator
+
 @main def hello(): Unit =
-  rng.demo()
+  chaineddigitgenerator.demo()
+  println()
+  bazeries.demo()
+  println()
