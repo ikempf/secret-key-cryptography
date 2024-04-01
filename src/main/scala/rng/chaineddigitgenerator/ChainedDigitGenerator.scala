@@ -30,15 +30,22 @@ def chainedDigitGenerator(seed: List[Int]): LazyList[Int] =
     Some((rn, seed.tail :+ rn))
   })
 
+private val Count = 100
+private val seed = List(3, 9, 2, 0, 5, 1, 6)
+
+private def basic(max: Int) =
+  val generator = ChainedDigitGenerator(seed)
+  Range(0, max).map(_ => generator.nextInt())
+
+private def rolling(max: Int) =
+  val generatorRolling = ChainedDigitGeneratorRolling(seed)
+  Range(0, max).map(_ => generatorRolling.nextInt())
+
+private def stream(max: Int) =
+  chainedDigitGenerator(seed).take(Count)
+
 def demo(): Unit =
   println(s"-- 4.5.1 Chained digit generator")
-  val Count = 100
-  val seed = List(3, 9, 2, 0, 5, 1, 6)
-  val generator = ChainedDigitGenerator(seed)
-  val firstHundred = Range(0, Count).map(_ => generator.nextInt())
-  val generatorRolling = ChainedDigitGeneratorRolling(seed)
-  val firstHundredRolling = Range(0, Count).map(_ => generatorRolling.nextInt())
-  val firstHundredStream = chainedDigitGenerator(seed).take(Count)
-  println(s"Chained digit generator basic:   ${firstHundred.mkString(", ")}")
-  println(s"Chained digit generator rolling: ${firstHundredRolling.mkString(", ")}")
-  println(s"Chained digit generator stream:  ${firstHundredStream.mkString(", ")}")
+  println(s"Chained digit generator basic:   ${basic(Count).mkString(", ")}")
+  println(s"Chained digit generator rolling: ${rolling(Count).mkString(", ")}")
+  println(s"Chained digit generator stream:  ${stream(Count).mkString(", ")}")
