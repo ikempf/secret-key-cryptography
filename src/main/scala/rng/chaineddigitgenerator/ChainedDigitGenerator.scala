@@ -25,10 +25,10 @@ class ChainedDigitGeneratorRolling(seed: List[Int]):
     }
 
 def chainedDigitGenerator(seed: List[Int]): LazyList[Int] =
-  LazyList.unfold(seed)(seed => {
+  LazyList.unfold(seed)(seed => 
     val rn = (seed.head + seed.last) % 10
     Some((rn, seed.tail :+ rn))
-  })
+  )
 
 private val Count = 100
 private val seed = List(3, 9, 2, 0, 5, 1, 6)
