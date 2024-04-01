@@ -1,4 +1,4 @@
-package rng
+package rng.chaineddigitgenerator
 
 // Not thread safe
 class ChainedDigitGenerator(seed: List[Int]):
@@ -17,10 +17,12 @@ class ChainedDigitGeneratorRolling(seed: List[Int]):
   private def last = (index + seed.size - 1) % seed.size
 
   def nextInt(): Int =
-    val rn = (window(head) + window(last)) % 10
-    window((last + 1) % seed.size) = rn
-    index = index + 1
-    rn
+    synchronized {
+      val rn = (window(head) + window(last)) % 10
+      window((last + 1) % seed.size) = rn
+      index = index + 1
+      rn
+    }
 
 def chainedDigitGenerator(seed: List[Int]): LazyList[Int] =
   LazyList.unfold(seed)(seed => {
@@ -28,8 +30,8 @@ def chainedDigitGenerator(seed: List[Int]): LazyList[Int] =
     Some((rn, seed.tail :+ rn))
   })
 
-
 def demo(): Unit =
+  println(s"-- 4.5.1 Chained digit generator")
   val Count = 100
   val seed = List(3, 9, 2, 0, 5, 1, 6)
   val generator = ChainedDigitGenerator(seed)
@@ -37,6 +39,6 @@ def demo(): Unit =
   val generatorRolling = ChainedDigitGeneratorRolling(seed)
   val firstHundredRolling = Range(0, Count).map(_ => generatorRolling.nextInt())
   val firstHundredStream = chainedDigitGenerator(seed).take(Count)
-  println(s"Chained digit generator       : ${firstHundred.mkString(", ")}")
-  println(s"Chained digit generator atomic: ${firstHundredRolling.mkString(", ")}")
-  println(s"Chained digit generator stream: ${firstHundredStream.mkString(", ")}")
+  println(s"Chained digit generator basic:   ${firstHundred.mkString(", ")}")
+  println(s"Chained digit generator rolling: ${firstHundredRolling.mkString(", ")}")
+  println(s"Chained digit generator stream:  ${firstHundredStream.mkString(", ")}")
