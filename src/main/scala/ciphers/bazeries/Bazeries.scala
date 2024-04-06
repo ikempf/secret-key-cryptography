@@ -64,7 +64,7 @@ private val Alphabet =
   )
 
 def demo(): Unit =
-  println(s"-- 4.6.1 Bazeries Type 4 ")
+  println(s"-- 4.6.1 Bazeries Type 4")
 
   val plaintext = "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG"
   val ciphertext = bazeriesType4(Alphabet, TranspositionKey, plaintext)
