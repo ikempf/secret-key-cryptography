@@ -24,22 +24,21 @@ private def lengthened(key: String, length: Int) =
 
 def trigramCountFormat(cipherText: String): String =
   trigramCount(cipherText)
-    .toList.sortBy(_._2)
-    .map { case (str, count) => s"$count $str" }
+    .toList.sortBy(_._2._1)
+    .map { case (str, (count, positions)) => s"$count $str ${positions.mkString(" ")}" }
     .mkString("\n")
 
-def trigramCount(cipherText: String) =
+def trigramCount(cipherText: String): Map[String, (Int, List[Int])] =
   Range.inclusive(2, cipherText.length / 2)
     .map(size => trigramCountSize(cipherText, size))
     .fold(Map.empty)(_ ++ _)
 
-//    .map { case ls@h :: l => (ls.map(_._1).mkString) -> h._2 }
-
 private def trigramCountSize(cipherText: String, size: Int) =
-  cipherText.sliding(size)
-    .toList.groupBy(identity)
-    .view.mapValues(_.size).toMap
-    .filter(_._2 > 1)
+  cipherText.zipWithIndex.toList.sliding(size)
+    .map(l => l.map(_._1).mkString -> l.head._2)
+    .toList.groupBy(_._1)
+    .view.mapValues(l => l.size -> l.map(_._2)).toMap
+    .filter(_._2._1 > 1)
 
 def demo(): Unit =
   println(s"-- 5.5 The Belaso cipher")
