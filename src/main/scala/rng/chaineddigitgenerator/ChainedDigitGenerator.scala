@@ -1,7 +1,7 @@
 package rng.chaineddigitgenerator
 
 // Not thread safe
-class ChainedDigitGenerator(seed: List[Int]):
+private class ChainedDigitGenerator(seed: List[Int]):
   private var window = Array.from(seed)
 
   def nextInt(): Int =
@@ -9,7 +9,7 @@ class ChainedDigitGenerator(seed: List[Int]):
     window = window.tail :+ rn
     rn
 
-class ChainedDigitGeneratorRolling(seed: List[Int]):
+private class ChainedDigitGeneratorRolling(seed: List[Int]):
   private val window = Array.from(seed)
   private var index = 0
 
@@ -24,7 +24,7 @@ class ChainedDigitGeneratorRolling(seed: List[Int]):
       rn
     }
 
-def chainedDigitGenerator(seed: List[Int]): LazyList[Int] =
+private def chainedDigitGenerator(seed: List[Int]) =
   LazyList.unfold(seed)(seed => 
     val rn = (seed.head + seed.last) % 10
     Some((rn, seed.tail :+ rn))
@@ -33,15 +33,15 @@ def chainedDigitGenerator(seed: List[Int]): LazyList[Int] =
 private val Count = 100
 private val seed = List(3, 9, 2, 0, 5, 1, 6)
 
-private def basic(max: Int) =
+def basic(max: Int): Seq[Int] =
   val generator = ChainedDigitGenerator(seed)
   Range(0, max).map(_ => generator.nextInt())
 
-private def rolling(max: Int) =
+def rolling(max: Int): Seq[Int] =
   val generatorRolling = ChainedDigitGeneratorRolling(seed)
   Range(0, max).map(_ => generatorRolling.nextInt())
 
-private def stream(max: Int) =
+def stream(max: Int): Seq[Int] =
   chainedDigitGenerator(seed).take(Count)
 
 def demo(): Unit =
