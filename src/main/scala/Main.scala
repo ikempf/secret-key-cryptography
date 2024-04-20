@@ -1,4 +1,5 @@
 import ciphers.bazeries
+import ciphers.belazo
 import rng.{alphabetmixing, chaineddigitgenerator}
 
 @main def hello(): Unit =
@@ -8,3 +9,4 @@ import rng.{alphabetmixing, chaineddigitgenerator}
   println()
   alphabetmixing.demo()
   println()
+  belazo.demo()
